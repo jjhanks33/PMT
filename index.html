@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Poly Mock Trial</title>
+  <link rel="stylesheet" href="https://cdn.quilljs.com/1.3.7/quill.snow.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Password overlay -->
+  <div id="pw-overlay" class="pw-overlay">
+    <div class="pw-box">
+      <div class="pw-icon">⚖️</div>
+      <h2 class="pw-title">Poly Mock Trial</h2>
+      <p class="pw-sub">Enter the team password to continue</p>
+      <input type="password" id="pw-input" class="pw-input" placeholder="Password" autofocus />
+      <button id="pw-btn" class="pw-btn">Enter</button>
+      <p id="pw-error" class="pw-error"></p>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-logo">
+        <div class="logo-icon">⚖️</div>
+        <div class="header-titles">
+          <h1>Poly Mock Trial</h1>
+          <p>Riverside Poly High School</p>
+        </div>
+      </div>
+      <div class="header-meta">
+        <span class="season-badge">2025–2026 Season</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="tab-nav">
+    <div class="tab-nav-inner">
+      <button class="tab-btn active" data-tab="current">
+        <span class="tab-icon">📂</span> Current Material
+      </button>
+      <button class="tab-btn" data-tab="videos">
+        <span class="tab-icon">🎬</span> Past Videos
+      </button>
+      <button class="tab-btn" data-tab="past">
+        <span class="tab-icon">📁</span> Past Material
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main">
+
+    <!-- ──────────────── CURRENT MATERIAL ──────────────── -->
+    <section id="tab-current" class="tab-section active">
+      <div class="section-header">
+        <h2>Current Material</h2>
+        <p>Active resources for the 2025–2026 competition season</p>
+      </div>
+
+      <!-- Case Overview Banner -->
+      <div class="case-banner">
+        <div class="case-banner-text">
+          <div class="case-label">Current Case</div>
+          <div class="case-title">State v. Morgan — Wrongful Termination &amp; Defamation</div>
+          <div class="case-subtitle">AMTA 2025–2026 National Case</div>
+        </div>
+        <div class="case-banner-badge">ACTIVE</div>
+      </div>
+
+      <!-- Category: Case Packet -->
+      <div class="category-block">
+        <h3 class="category-title">
+          <span class="cat-dot cat-dot--blue"></span> Case Packet
+        </h3>
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-icon card-icon--blue">📄</div>
+            <div class="card-body">
+              <div class="card-title">Case Packet</div>
+              <div class="card-meta">PDF · 48 pages · Updated Jan 12, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--blue">Official</span>
+                <span class="tag tag--gray">AMTA</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon card-icon--blue">📄</div>
+            <div class="card-body">
+              <div class="card-title">Jury Instructions</div>
+              <div class="card-meta">PDF · 12 pages · Updated Jan 12, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--blue">Official</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon card-icon--blue">📄</div>
+            <div class="card-body">
+              <div class="card-title">Stipulations</div>
+              <div class="card-meta">PDF · 6 pages · Updated Jan 12, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--blue">Official</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon card-icon--blue">📄</div>
+            <div class="card-body">
+              <div class="card-title">Exhibit List</div>
+              <div class="card-meta">PDF · 4 pages · Updated Jan 14, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--blue">Official</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category: Speeches -->
+      <div class="category-block">
+        <h3 class="category-title">
+          <span class="cat-dot cat-dot--orange"></span> Speeches
+        </h3>
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-icon card-icon--orange">🎤</div>
+            <div class="card-body">
+              <div class="card-title">Prosecution Opening Statement</div>
+              <div class="card-meta">DOCX · 4 pages · Updated Feb 8, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--green">Prosecution</span>
+                <span class="tag tag--yellow">Draft v3</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon card-icon--orange">🎤</div>
+            <div class="card-body">
+              <div class="card-title">Defense Opening Statement</div>
+              <div class="card-meta">DOCX · 4 pages · Updated Feb 9, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--purple">Defense</span>
+                <span class="tag tag--yellow">Draft v2</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon card-icon--orange">🎤</div>
+            <div class="card-body">
+              <div class="card-title">Prosecution Closing Argument</div>
+              <div class="card-meta">DOCX · 5 pages · Updated Feb 11, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--green">Prosecution</span>
+                <span class="tag tag--yellow">Draft v2</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon card-icon--orange">🎤</div>
+            <div class="card-body">
+              <div class="card-title">Defense Closing Argument</div>
+              <div class="card-meta">DOCX · 5 pages · Updated Feb 12, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--purple">Defense</span>
+                <span class="tag tag--yellow">Draft v1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category: Directs -->
+      <div class="category-block">
+        <h3 class="category-title">
+          <span class="cat-dot cat-dot--green"></span> Directs
+        </h3>
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-icon card-icon--green">🗂️</div>
+            <div class="card-body">
+              <div class="card-title">Alex Morgan — Direct Outline</div>
+              <div class="card-meta">DOCX · 8 pages · Updated Feb 3, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--green">Prosecution</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon card-icon--green">🗂️</div>
+            <div class="card-body">
+              <div class="card-title">Dr. Casey Liu — Direct Outline</div>
+              <div class="card-meta">DOCX · 6 pages · Updated Feb 1, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--green">Prosecution</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon card-icon--green">🗂️</div>
+            <div class="card-body">
+              <div class="card-title">Robin Chen — Direct Outline</div>
+              <div class="card-meta">DOCX · 5 pages · Updated Feb 2, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--green">Prosecution</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon card-icon--green">🗂️</div>
+            <div class="card-body">
+              <div class="card-title">Jordan Reyes — Direct Outline</div>
+              <div class="card-meta">DOCX · 7 pages · Updated Feb 5, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--purple">Defense</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon card-icon--green">🗂️</div>
+            <div class="card-body">
+              <div class="card-title">Sam Patel — Direct Outline</div>
+              <div class="card-meta">DOCX · 6 pages · Updated Feb 5, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--purple">Defense</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon card-icon--green">🗂️</div>
+            <div class="card-body">
+              <div class="card-title">Taylor Brooks — Direct Outline</div>
+              <div class="card-meta">DOCX · 5 pages · Updated Feb 6, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--purple">Defense</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category: Crosses -->
+      <div class="category-block">
+        <h3 class="category-title">
+          <span class="cat-dot cat-dot--red"></span> Crosses
+        </h3>
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-icon card-icon--red">🔍</div>
+            <div class="card-body">
+              <div class="card-title">Cross of Alex Morgan</div>
+              <div class="card-meta">DOCX · 5 pages · Updated Feb 10, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--purple">Defense</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon card-icon--red">🔍</div>
+            <div class="card-body">
+              <div class="card-title">Cross of Dr. Casey Liu</div>
+              <div class="card-meta">DOCX · 4 pages · Updated Feb 10, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--purple">Defense</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon card-icon--red">🔍</div>
+            <div class="card-body">
+              <div class="card-title">Cross of Robin Chen</div>
+              <div class="card-meta">DOCX · 4 pages · Updated Feb 11, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--purple">Defense</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon card-icon--red">🔍</div>
+            <div class="card-body">
+              <div class="card-title">Cross of Jordan Reyes</div>
+              <div class="card-meta">DOCX · 6 pages · Updated Feb 12, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--green">Prosecution</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon card-icon--red">🔍</div>
+            <div class="card-body">
+              <div class="card-title">Cross of Sam Patel</div>
+              <div class="card-meta">DOCX · 5 pages · Updated Feb 12, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--green">Prosecution</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon card-icon--red">🔍</div>
+            <div class="card-body">
+              <div class="card-title">Cross of Taylor Brooks</div>
+              <div class="card-meta">DOCX · 4 pages · Updated Feb 13, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--green">Prosecution</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category: Objection Work -->
+      <div class="category-block">
+        <h3 class="category-title">
+          <span class="cat-dot cat-dot--orange"></span> Objection Work
+        </h3>
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-icon card-icon--orange">⚠️</div>
+            <div class="card-body">
+              <div class="card-title">Objections Quick Reference Sheet</div>
+              <div class="card-meta">PDF · 3 pages · Updated Jan 28, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--orange">Reference</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon card-icon--orange">⚠️</div>
+            <div class="card-body">
+              <div class="card-title">Hearsay Exceptions Breakdown</div>
+              <div class="card-meta">PDF · 5 pages · Added Feb 2, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--orange">Reference</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon card-icon--orange">⚠️</div>
+            <div class="card-body">
+              <div class="card-title">Common Objections &amp; Responses</div>
+              <div class="card-meta">PDF · 6 pages · Added Feb 4, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--orange">Reference</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon card-icon--orange">⚠️</div>
+            <div class="card-body">
+              <div class="card-title">Practice Drill — Objection Log #1</div>
+              <div class="card-meta">DOCX · 2 pages · Added Feb 7, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--yellow">Practice</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon card-icon--orange">⚠️</div>
+            <div class="card-body">
+              <div class="card-title">Practice Drill — Objection Log #2</div>
+              <div class="card-meta">DOCX · 2 pages · Added Feb 14, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--yellow">Practice</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon card-icon--orange">⚠️</div>
+            <div class="card-body">
+              <div class="card-title">Improper Question Forms Guide</div>
+              <div class="card-meta">PDF · 4 pages · Added Feb 9, 2026</div>
+              <div class="card-tags">
+                <span class="tag tag--orange">Reference</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────── PAST VIDEOS ──────────────── -->
+    <section id="tab-videos" class="tab-section">
+      <div class="section-header">
+        <h2>Past Videos</h2>
+        <p>Recordings of competitions, practice rounds, and scrimmages</p>
+      </div>
+
+      <!-- Filter Row -->
+      <div class="filter-row">
+        <button class="filter-btn active">All</button>
+        <button class="filter-btn">2024–2025</button>
+        <button class="filter-btn">2023–2024</button>
+        <button class="filter-btn">2022–2023</button>
+        <button class="filter-btn">Practice</button>
+        <button class="filter-btn">Competition</button>
+      </div>
+
+      <!-- Season Group -->
+      <div class="season-group">
+        <div class="season-group-label">2024–2025 Season</div>
+        <div class="video-grid">
+
+          <div class="video-card">
+            <div class="video-thumb">
+              <div class="thumb-inner thumb--dark">
+                <div class="play-btn">▶</div>
+              </div>
+              <span class="video-badge video-badge--gold">Regionals</span>
+            </div>
+            <div class="video-info">
+              <div class="video-title">Regional Championship — Round 4 vs. UCLA</div>
+              <div class="video-meta">
+                <span>Mar 8, 2025</span>
+                <span>·</span>
+                <span>1h 42m</span>
+                <span>·</span>
+                <span class="outcome outcome--win">Win</span>
+              </div>
+              <div class="video-desc">Prosecution side. Team scored 192 — highest score of the tournament.</div>
+            </div>
+          </div>
+
+          <div class="video-card">
+            <div class="video-thumb">
+              <div class="thumb-inner thumb--mid">
+                <div class="play-btn">▶</div>
+              </div>
+              <span class="video-badge video-badge--gold">Regionals</span>
+            </div>
+            <div class="video-info">
+              <div class="video-title">Regional Championship — Round 3 vs. USC</div>
+              <div class="video-meta">
+                <span>Mar 7, 2025</span>
+                <span>·</span>
+                <span>1h 38m</span>
+                <span>·</span>
+                <span class="outcome outcome--win">Win</span>
+              </div>
+              <div class="video-desc">Defense side. Strong cross-examination performance by team members.</div>
+            </div>
+          </div>
+
+          <div class="video-card">
+            <div class="video-thumb">
+              <div class="thumb-inner thumb--light">
+                <div class="play-btn">▶</div>
+              </div>
+              <span class="video-badge video-badge--blue">Invitational</span>
+            </div>
+            <div class="video-info">
+              <div class="video-title">Santa Barbara Invitational — Final Round</div>
+              <div class="video-meta">
+                <span>Feb 15, 2025</span>
+                <span>·</span>
+                <span>1h 55m</span>
+                <span>·</span>
+                <span class="outcome outcome--loss">Loss</span>
+              </div>
+              <div class="video-desc">Defense side. Close round — good material for reviewing objection strategy.</div>
+            </div>
+          </div>
+
+          <div class="video-card">
+            <div class="video-thumb">
+              <div class="thumb-inner thumb--dark">
+                <div class="play-btn">▶</div>
+              </div>
+              <span class="video-badge video-badge--gray">Practice</span>
+            </div>
+            <div class="video-info">
+              <div class="video-title">Internal Scrimmage — Full Trial Run</div>
+              <div class="video-meta">
+                <span>Jan 30, 2025</span>
+                <span>·</span>
+                <span>2h 10m</span>
+              </div>
+              <div class="video-desc">Both sides recorded. Great for reviewing witness consistency.</div>
+            </div>
+          </div>
+
+          <div class="video-card">
+            <div class="video-thumb">
+              <div class="thumb-inner thumb--mid">
+                <div class="play-btn">▶</div>
+              </div>
+              <span class="video-badge video-badge--gray">Practice</span>
+            </div>
+            <div class="video-info">
+              <div class="video-title">Witness Workshop — Direct &amp; Cross Drill</div>
+              <div class="video-meta">
+                <span>Jan 18, 2025</span>
+                <span>·</span>
+                <span>58m</span>
+              </div>
+              <div class="video-desc">Focus on impeachment technique and exhibit introduction.</div>
+            </div>
+          </div>
+
+          <div class="video-card">
+            <div class="video-thumb">
+              <div class="thumb-inner thumb--light">
+                <div class="play-btn">▶</div>
+              </div>
+              <span class="video-badge video-badge--blue">Invitational</span>
+            </div>
+            <div class="video-info">
+              <div class="video-title">Berkeley Invitational — Round 2</div>
+              <div class="video-meta">
+                <span>Nov 9, 2024</span>
+                <span>·</span>
+                <span>1h 28m</span>
+                <span>·</span>
+                <span class="outcome outcome--win">Win</span>
+              </div>
+              <div class="video-desc">Prosecution side. Notable closing argument performance.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Season Group 2 -->
+      <div class="season-group">
+        <div class="season-group-label">2023–2024 Season</div>
+        <div class="video-grid">
+
+          <div class="video-card">
+            <div class="video-thumb">
+              <div class="thumb-inner thumb--dark">
+                <div class="play-btn">▶</div>
+              </div>
+              <span class="video-badge video-badge--gold">Regionals</span>
+            </div>
+            <div class="video-info">
+              <div class="video-title">Regional Championship — Round 2 vs. Stanford</div>
+              <div class="video-meta">
+                <span>Mar 2, 2024</span>
+                <span>·</span>
+                <span>1h 50m</span>
+                <span>·</span>
+                <span class="outcome outcome--loss">Loss</span>
+              </div>
+              <div class="video-desc">Defense side. Helpful for studying strong prosecution strategy.</div>
+            </div>
+          </div>
+
+          <div class="video-card">
+            <div class="video-thumb">
+              <div class="thumb-inner thumb--mid">
+                <div class="play-btn">▶</div>
+              </div>
+              <span class="video-badge video-badge--gray">Practice</span>
+            </div>
+            <div class="video-info">
+              <div class="video-title">Mock Trial 101 — New Member Orientation Trial</div>
+              <div class="video-meta">
+                <span>Oct 5, 2023</span>
+                <span>·</span>
+                <span>1h 15m</span>
+              </div>
+              <div class="video-desc">Great introductory example for new members learning trial structure.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────── PAST MATERIAL ──────────────── -->
+    <section id="tab-past" class="tab-section">
+      <div class="section-header">
+        <h2>Past Material</h2>
+        <p>Archived documents from previous competition seasons</p>
+      </div>
+
+      <!-- Accordion: 2024-2025 -->
+      <div class="accordion-block open">
+        <button class="accordion-header">
+          <span class="accordion-title">
+            <span class="acc-dot acc-dot--blue"></span>
+            2024–2025 Season — <em>State v. Nguyen (Fraud &amp; Battery)</em>
+          </span>
+          <span class="accordion-arrow">▲</span>
+        </button>
+        <div class="accordion-body">
+          <div class="category-block">
+            <h3 class="category-title"><span class="cat-dot cat-dot--blue"></span> Case Packet</h3>
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-icon card-icon--blue">📄</div>
+                <div class="card-body">
+                  <div class="card-title">Case Packet — State v. Nguyen</div>
+                  <div class="card-meta">PDF · 44 pages</div>
+                  <div class="card-tags"><span class="tag tag--blue">Official</span><span class="tag tag--gray">AMTA</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--blue">📄</div>
+                <div class="card-body">
+                  <div class="card-title">Jury Instructions</div>
+                  <div class="card-meta">PDF · 10 pages</div>
+                  <div class="card-tags"><span class="tag tag--blue">Official</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--blue">📄</div>
+                <div class="card-body">
+                  <div class="card-title">Stipulations</div>
+                  <div class="card-meta">PDF · 5 pages</div>
+                  <div class="card-tags"><span class="tag tag--blue">Official</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="category-block">
+            <h3 class="category-title"><span class="cat-dot cat-dot--orange"></span> Speeches</h3>
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-icon card-icon--orange">🎤</div>
+                <div class="card-body">
+                  <div class="card-title">Prosecution Opening Statement</div>
+                  <div class="card-meta">DOCX · 4 pages</div>
+                  <div class="card-tags"><span class="tag tag--green">Prosecution</span><span class="tag tag--yellow">Finals</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--orange">🎤</div>
+                <div class="card-body">
+                  <div class="card-title">Defense Opening Statement</div>
+                  <div class="card-meta">DOCX · 4 pages</div>
+                  <div class="card-tags"><span class="tag tag--purple">Defense</span><span class="tag tag--yellow">Finals</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--orange">🎤</div>
+                <div class="card-body">
+                  <div class="card-title">Prosecution Closing Argument</div>
+                  <div class="card-meta">DOCX · 5 pages</div>
+                  <div class="card-tags"><span class="tag tag--green">Prosecution</span><span class="tag tag--yellow">Finals</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--orange">🎤</div>
+                <div class="card-body">
+                  <div class="card-title">Defense Closing Argument</div>
+                  <div class="card-meta">DOCX · 5 pages</div>
+                  <div class="card-tags"><span class="tag tag--purple">Defense</span><span class="tag tag--yellow">Finals</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="category-block">
+            <h3 class="category-title"><span class="cat-dot cat-dot--green"></span> Directs</h3>
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-icon card-icon--green">🗂️</div>
+                <div class="card-body">
+                  <div class="card-title">Prosecution Witness Directs</div>
+                  <div class="card-meta">ZIP · 3 files</div>
+                  <div class="card-tags"><span class="tag tag--green">Prosecution</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--green">🗂️</div>
+                <div class="card-body">
+                  <div class="card-title">Defense Witness Directs</div>
+                  <div class="card-meta">ZIP · 3 files</div>
+                  <div class="card-tags"><span class="tag tag--purple">Defense</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="category-block">
+            <h3 class="category-title"><span class="cat-dot cat-dot--red"></span> Crosses</h3>
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-icon card-icon--red">🔍</div>
+                <div class="card-body">
+                  <div class="card-title">Cross-Examination Bank — All Witnesses</div>
+                  <div class="card-meta">DOCX · 30 pages</div>
+                  <div class="card-tags"><span class="tag tag--green">Prosecution</span><span class="tag tag--purple">Defense</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="category-block">
+            <h3 class="category-title"><span class="cat-dot cat-dot--orange"></span> Objection Work</h3>
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-icon card-icon--orange">⚠️</div>
+                <div class="card-body">
+                  <div class="card-title">Season Objection Log</div>
+                  <div class="card-meta">DOCX · 8 pages</div>
+                  <div class="card-tags"><span class="tag tag--yellow">Practice</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--orange">⚠️</div>
+                <div class="card-body">
+                  <div class="card-title">Fraud Case Objection Scenarios</div>
+                  <div class="card-meta">PDF · 4 pages</div>
+                  <div class="card-tags"><span class="tag tag--orange">Reference</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accordion: 2023-2024 -->
+      <div class="accordion-block">
+        <button class="accordion-header">
+          <span class="accordion-title">
+            <span class="acc-dot acc-dot--green"></span>
+            2023–2024 Season — <em>State v. Chen (Assault &amp; Civil Rights)</em>
+          </span>
+          <span class="accordion-arrow">▼</span>
+        </button>
+        <div class="accordion-body" style="display:none;">
+          <div class="category-block">
+            <h3 class="category-title"><span class="cat-dot cat-dot--blue"></span> Case Packet</h3>
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-icon card-icon--blue">📄</div>
+                <div class="card-body">
+                  <div class="card-title">Case Packet — State v. Chen</div>
+                  <div class="card-meta">PDF · 40 pages</div>
+                  <div class="card-tags"><span class="tag tag--blue">Official</span><span class="tag tag--gray">AMTA</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--blue">📄</div>
+                <div class="card-body">
+                  <div class="card-title">Jury Instructions</div>
+                  <div class="card-meta">PDF · 11 pages</div>
+                  <div class="card-tags"><span class="tag tag--blue">Official</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--blue">📄</div>
+                <div class="card-body">
+                  <div class="card-title">Stipulations</div>
+                  <div class="card-meta">PDF · 4 pages</div>
+                  <div class="card-tags"><span class="tag tag--blue">Official</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="category-block">
+            <h3 class="category-title"><span class="cat-dot cat-dot--orange"></span> Speeches</h3>
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-icon card-icon--orange">🎤</div>
+                <div class="card-body">
+                  <div class="card-title">Prosecution Opening Statement</div>
+                  <div class="card-meta">DOCX · 3 pages</div>
+                  <div class="card-tags"><span class="tag tag--green">Prosecution</span><span class="tag tag--yellow">Finals</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--orange">🎤</div>
+                <div class="card-body">
+                  <div class="card-title">Defense Opening Statement</div>
+                  <div class="card-meta">DOCX · 3 pages</div>
+                  <div class="card-tags"><span class="tag tag--purple">Defense</span><span class="tag tag--yellow">Finals</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--orange">🎤</div>
+                <div class="card-body">
+                  <div class="card-title">Prosecution Closing Argument</div>
+                  <div class="card-meta">DOCX · 5 pages</div>
+                  <div class="card-tags"><span class="tag tag--green">Prosecution</span><span class="tag tag--yellow">Finals</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--orange">🎤</div>
+                <div class="card-body">
+                  <div class="card-title">Defense Closing Argument</div>
+                  <div class="card-meta">DOCX · 4 pages</div>
+                  <div class="card-tags"><span class="tag tag--purple">Defense</span><span class="tag tag--yellow">Finals</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="category-block">
+            <h3 class="category-title"><span class="cat-dot cat-dot--green"></span> Directs</h3>
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-icon card-icon--green">🗂️</div>
+                <div class="card-body">
+                  <div class="card-title">Prosecution Witness Directs</div>
+                  <div class="card-meta">ZIP · 3 files</div>
+                  <div class="card-tags"><span class="tag tag--green">Prosecution</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--green">🗂️</div>
+                <div class="card-body">
+                  <div class="card-title">Defense Witness Directs</div>
+                  <div class="card-meta">ZIP · 3 files</div>
+                  <div class="card-tags"><span class="tag tag--purple">Defense</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="category-block">
+            <h3 class="category-title"><span class="cat-dot cat-dot--red"></span> Crosses</h3>
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-icon card-icon--red">🔍</div>
+                <div class="card-body">
+                  <div class="card-title">Cross-Examination Bank — All Witnesses</div>
+                  <div class="card-meta">DOCX · 24 pages</div>
+                  <div class="card-tags"><span class="tag tag--green">Prosecution</span><span class="tag tag--purple">Defense</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="category-block">
+            <h3 class="category-title"><span class="cat-dot cat-dot--orange"></span> Objection Work</h3>
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-icon card-icon--orange">⚠️</div>
+                <div class="card-body">
+                  <div class="card-title">Season Objection Log</div>
+                  <div class="card-meta">DOCX · 6 pages</div>
+                  <div class="card-tags"><span class="tag tag--yellow">Practice</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--orange">⚠️</div>
+                <div class="card-body">
+                  <div class="card-title">Civil Rights Case Objection Scenarios</div>
+                  <div class="card-meta">PDF · 3 pages</div>
+                  <div class="card-tags"><span class="tag tag--orange">Reference</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accordion: 2022-2023 -->
+      <div class="accordion-block">
+        <button class="accordion-header">
+          <span class="accordion-title">
+            <span class="acc-dot acc-dot--orange"></span>
+            2022–2023 Season — <em>State v. Park (Homicide)</em>
+          </span>
+          <span class="accordion-arrow">▼</span>
+        </button>
+        <div class="accordion-body" style="display:none;">
+          <div class="category-block">
+            <h3 class="category-title"><span class="cat-dot cat-dot--blue"></span> Case Packet</h3>
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-icon card-icon--blue">📄</div>
+                <div class="card-body">
+                  <div class="card-title">Case Packet — State v. Park</div>
+                  <div class="card-meta">PDF · 52 pages</div>
+                  <div class="card-tags"><span class="tag tag--blue">Official</span><span class="tag tag--gray">AMTA</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--blue">📄</div>
+                <div class="card-body">
+                  <div class="card-title">Jury Instructions</div>
+                  <div class="card-meta">PDF · 13 pages</div>
+                  <div class="card-tags"><span class="tag tag--blue">Official</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--blue">📄</div>
+                <div class="card-body">
+                  <div class="card-title">Stipulations</div>
+                  <div class="card-meta">PDF · 5 pages</div>
+                  <div class="card-tags"><span class="tag tag--blue">Official</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="category-block">
+            <h3 class="category-title"><span class="cat-dot cat-dot--orange"></span> Speeches</h3>
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-icon card-icon--orange">🎤</div>
+                <div class="card-body">
+                  <div class="card-title">Prosecution Opening Statement</div>
+                  <div class="card-meta">DOCX · 4 pages</div>
+                  <div class="card-tags"><span class="tag tag--green">Prosecution</span><span class="tag tag--yellow">Finals</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--orange">🎤</div>
+                <div class="card-body">
+                  <div class="card-title">Defense Opening Statement</div>
+                  <div class="card-meta">DOCX · 4 pages</div>
+                  <div class="card-tags"><span class="tag tag--purple">Defense</span><span class="tag tag--yellow">Finals</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--orange">🎤</div>
+                <div class="card-body">
+                  <div class="card-title">Prosecution Closing Argument</div>
+                  <div class="card-meta">DOCX · 6 pages</div>
+                  <div class="card-tags"><span class="tag tag--green">Prosecution</span><span class="tag tag--yellow">Finals</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--orange">🎤</div>
+                <div class="card-body">
+                  <div class="card-title">Defense Closing Argument</div>
+                  <div class="card-meta">DOCX · 5 pages</div>
+                  <div class="card-tags"><span class="tag tag--purple">Defense</span><span class="tag tag--yellow">Finals</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="category-block">
+            <h3 class="category-title"><span class="cat-dot cat-dot--green"></span> Directs</h3>
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-icon card-icon--green">🗂️</div>
+                <div class="card-body">
+                  <div class="card-title">Prosecution Witness Directs</div>
+                  <div class="card-meta">ZIP · 3 files</div>
+                  <div class="card-tags"><span class="tag tag--green">Prosecution</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--green">🗂️</div>
+                <div class="card-body">
+                  <div class="card-title">Defense Witness Directs</div>
+                  <div class="card-meta">ZIP · 3 files</div>
+                  <div class="card-tags"><span class="tag tag--purple">Defense</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="category-block">
+            <h3 class="category-title"><span class="cat-dot cat-dot--red"></span> Crosses</h3>
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-icon card-icon--red">🔍</div>
+                <div class="card-body">
+                  <div class="card-title">Cross-Examination Bank — All Witnesses</div>
+                  <div class="card-meta">DOCX · 28 pages</div>
+                  <div class="card-tags"><span class="tag tag--green">Prosecution</span><span class="tag tag--purple">Defense</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="category-block">
+            <h3 class="category-title"><span class="cat-dot cat-dot--orange"></span> Objection Work</h3>
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-icon card-icon--orange">⚠️</div>
+                <div class="card-body">
+                  <div class="card-title">Season Objection Log</div>
+                  <div class="card-meta">DOCX · 7 pages</div>
+                  <div class="card-tags"><span class="tag tag--yellow">Practice</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--orange">⚠️</div>
+                <div class="card-body">
+                  <div class="card-title">Homicide Case Objection Scenarios</div>
+                  <div class="card-meta">PDF · 4 pages</div>
+                  <div class="card-tags"><span class="tag tag--orange">Reference</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accordion: 2021-2022 -->
+      <div class="accordion-block">
+        <button class="accordion-header">
+          <span class="accordion-title">
+            <span class="acc-dot acc-dot--red"></span>
+            2021–2022 Season — <em>State v. Rivera (Drug Trafficking)</em>
+          </span>
+          <span class="accordion-arrow">▼</span>
+        </button>
+        <div class="accordion-body" style="display:none;">
+          <div class="category-block">
+            <h3 class="category-title"><span class="cat-dot cat-dot--blue"></span> Case Packet</h3>
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-icon card-icon--blue">📄</div>
+                <div class="card-body">
+                  <div class="card-title">Case Packet — State v. Rivera</div>
+                  <div class="card-meta">PDF · 38 pages</div>
+                  <div class="card-tags"><span class="tag tag--blue">Official</span><span class="tag tag--gray">AMTA</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--blue">📄</div>
+                <div class="card-body">
+                  <div class="card-title">Jury Instructions</div>
+                  <div class="card-meta">PDF · 10 pages</div>
+                  <div class="card-tags"><span class="tag tag--blue">Official</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--blue">📄</div>
+                <div class="card-body">
+                  <div class="card-title">Stipulations</div>
+                  <div class="card-meta">PDF · 4 pages</div>
+                  <div class="card-tags"><span class="tag tag--blue">Official</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="category-block">
+            <h3 class="category-title"><span class="cat-dot cat-dot--orange"></span> Speeches</h3>
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-icon card-icon--orange">🎤</div>
+                <div class="card-body">
+                  <div class="card-title">Prosecution Opening Statement</div>
+                  <div class="card-meta">DOCX · 4 pages</div>
+                  <div class="card-tags"><span class="tag tag--green">Prosecution</span><span class="tag tag--yellow">Finals</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--orange">🎤</div>
+                <div class="card-body">
+                  <div class="card-title">Defense Opening Statement</div>
+                  <div class="card-meta">DOCX · 3 pages</div>
+                  <div class="card-tags"><span class="tag tag--purple">Defense</span><span class="tag tag--yellow">Finals</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--orange">🎤</div>
+                <div class="card-body">
+                  <div class="card-title">Prosecution Closing Argument</div>
+                  <div class="card-meta">DOCX · 5 pages</div>
+                  <div class="card-tags"><span class="tag tag--green">Prosecution</span><span class="tag tag--yellow">Finals</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--orange">🎤</div>
+                <div class="card-body">
+                  <div class="card-title">Defense Closing Argument</div>
+                  <div class="card-meta">DOCX · 4 pages</div>
+                  <div class="card-tags"><span class="tag tag--purple">Defense</span><span class="tag tag--yellow">Finals</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="category-block">
+            <h3 class="category-title"><span class="cat-dot cat-dot--green"></span> Directs</h3>
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-icon card-icon--green">🗂️</div>
+                <div class="card-body">
+                  <div class="card-title">Prosecution Witness Directs</div>
+                  <div class="card-meta">ZIP · 3 files</div>
+                  <div class="card-tags"><span class="tag tag--green">Prosecution</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--green">🗂️</div>
+                <div class="card-body">
+                  <div class="card-title">Defense Witness Directs</div>
+                  <div class="card-meta">ZIP · 3 files</div>
+                  <div class="card-tags"><span class="tag tag--purple">Defense</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="category-block">
+            <h3 class="category-title"><span class="cat-dot cat-dot--red"></span> Crosses</h3>
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-icon card-icon--red">🔍</div>
+                <div class="card-body">
+                  <div class="card-title">Cross-Examination Bank — All Witnesses</div>
+                  <div class="card-meta">DOCX · 22 pages</div>
+                  <div class="card-tags"><span class="tag tag--green">Prosecution</span><span class="tag tag--purple">Defense</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="category-block">
+            <h3 class="category-title"><span class="cat-dot cat-dot--orange"></span> Objection Work</h3>
+            <div class="card-grid">
+              <div class="card">
+                <div class="card-icon card-icon--orange">⚠️</div>
+                <div class="card-body">
+                  <div class="card-title">Season Objection Log</div>
+                  <div class="card-meta">DOCX · 5 pages</div>
+                  <div class="card-tags"><span class="tag tag--yellow">Practice</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-icon card-icon--orange">⚠️</div>
+                <div class="card-body">
+                  <div class="card-title">Drug Trafficking Case Objection Scenarios</div>
+                  <div class="card-meta">PDF · 3 pages</div>
+                  <div class="card-tags"><span class="tag tag--orange">Reference</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Poly Mock Trial · Riverside Poly High School · <span id="footer-year"></span></p>
+  </footer>
+
+  <!-- Editor Modal -->
+  <div id="editor-modal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="modal-label">Editing</div>
+          <div id="modal-card-title" class="modal-title"></div>
+        </div>
+        <div class="modal-actions">
+          <span id="modal-save-status" class="save-status"></span>
+          <button id="modal-paste-btn" class="btn-paste">Replace Text w/ Clipboard</button>
+          <button id="modal-save-btn" class="btn-save">Save</button>
+          <button id="modal-fullscreen-btn" class="btn-icon" aria-label="Toggle fullscreen" title="Toggle fullscreen">
+            <svg id="fs-expand-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="1,5 1,1 5,1"/><polyline points="10,1 14,1 14,5"/>
+              <polyline points="14,10 14,14 10,14"/><polyline points="5,14 1,14 1,10"/>
+            </svg>
+            <svg id="fs-compress-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+              <polyline points="5,1 5,5 1,5"/><polyline points="10,5 14,5 14,1"/>
+              <polyline points="14,10 10,10 10,14"/><polyline points="1,10 5,10 5,14"/>
+            </svg>
+          </button>
+          <button id="modal-close-btn" class="btn-icon" aria-label="Close">✕</button>
+        </div>
+      </div>
+      <div id="modal-tag-row" class="modal-tag-row"></div>
+      <div id="quill-editor"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+  <!-- Firebase compat SDK — get exact version from your Firebase project console -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
