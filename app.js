@@ -183,16 +183,11 @@ function addCustomCard(category) {
   saveField(id, 'category', category);
 
   const grid = getGridForCategory(category);
-  if (!grid) return;
+  if (!grid) { console.warn('addCustomCard: no grid found for category:', category); return; }
   const card = buildCustomCardElement(id);
   grid.appendChild(card);
   refreshCardIndicators();
-
-  // Auto-open title edit so user can name it immediately
-  const titleEl = card.querySelector('.card-title');
-  const editBtn = card.querySelector('.card-edit-btn');
-  const wrap    = card.querySelector('.card-title-wrap');
-  startTitleEdit(card, titleEl, editBtn, wrap);
+  card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 function buildTitleEdit(card, titleEl) {
