@@ -162,24 +162,28 @@ function buildCustomCardElement(id) {
   return card;
 }
 
-function initCustomCards() {
-  const container = document.getElementById('custom-cards-container');
-  const grid      = document.getElementById('custom-cards-grid');
-  Object.keys(cache).forEach(id => {
-    if (!id.startsWith('mt::current::custom::')) return;
-    grid.appendChild(buildCustomCardElement(id));
-  });
-  if (grid.children.length > 0) container.style.display = '';
+function getGridForCategory(category) {
+  const block = document.querySelector(`#tab-current .category-block[data-category="${CSS.escape(category)}"]`);
+  return block ? block.querySelector('.card-grid') : null;
 }
 
-function addCustomCard() {
-  const id = 'mt::current::custom::' + Date.now();
-  cache[id] = { title: 'New Card' };
-  saveField(id, 'title', 'New Card');
+function initCustomCards() {
+  Object.keys(cache).forEach(id => {
+    if (!id.startsWith('mt::current::custom::')) return;
+    const category = cache[id]?.category;
+    const grid = category ? getGridForCategory(category) : null;
+    if (grid) grid.appendChild(buildCustomCardElement(id));
+  });
+}
 
-  const container = document.getElementById('custom-cards-container');
-  const grid      = document.getElementById('custom-cards-grid');
-  container.style.display = '';
+function addCustomCard(category) {
+  const id = 'mt::current::custom::' + Date.now();
+  cache[id] = { title: 'New Card', category };
+  saveField(id, 'title', 'New Card');
+  saveField(id, 'category', category);
+
+  const grid = getGridForCategory(category);
+  if (!grid) return;
   const card = buildCustomCardElement(id);
   grid.appendChild(card);
   refreshCardIndicators();
@@ -422,7 +426,13 @@ document.addEventListener('keydown', e => {
 // ═══════════════════════════════════════════════════════════════
 //  APP STARTUP
 // ═══════════════════════════════════════════════════════════════
-document.getElementById('add-card-btn').addEventListener('click', addCustomCard);
+document.querySelectorAll('#tab-current .btn-add-to-category').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const category = btn.closest('.category-block').dataset.category;
+    addCustomCard(category);
+  });
+});
 
 // ═══════════════════════════════════════════════════════════════
 //  APP STARTUP
