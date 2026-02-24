@@ -117,6 +117,18 @@ const TAG_DEFS = [
   { name: 'Reference',   cls: 'tag-toggle--reference',   tagCls: 'tag--orange' },
 ];
 
+function setupCard(card, cardId) {
+  card.dataset.cardId = cardId;
+
+  const titleEl    = card.querySelector('.card-title');
+  const savedTitle = cache[cardId]?.title;
+  if (savedTitle) titleEl.textContent = savedTitle;
+
+  buildTitleEdit(card, titleEl);
+  buildCardTagDisplay(card, cardId);
+  card.addEventListener('click', () => openEditor(card));
+}
+
 function initCards() {
   document.querySelectorAll('.card').forEach(card => {
     const origTitle = card.querySelector('.card-title').textContent.trim();
@@ -128,15 +140,55 @@ function initCards() {
     } else {
       cardId = 'mt::current::' + origTitle;
     }
-    card.dataset.cardId = cardId;
-
-    const titleEl    = card.querySelector('.card-title');
-    const savedTitle = cache[cardId]?.title;
-    if (savedTitle) titleEl.textContent = savedTitle;
-
-    buildTitleEdit(card, titleEl);
-    buildCardTagDisplay(card, cardId);
+    setupCard(card, cardId);
   });
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  CUSTOM CARDS
+// ═══════════════════════════════════════════════════════════════
+function buildCustomCardElement(id) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <div class="card-icon card-icon--blue">📄</div>
+    <div class="card-body">
+      <div class="card-title">New Card</div>
+      <div class="card-meta">Custom</div>
+      <div class="card-tags"></div>
+    </div>
+  `;
+  setupCard(card, id);
+  return card;
+}
+
+function initCustomCards() {
+  const container = document.getElementById('custom-cards-container');
+  const grid      = document.getElementById('custom-cards-grid');
+  Object.keys(cache).forEach(id => {
+    if (!id.startsWith('mt::current::custom::')) return;
+    grid.appendChild(buildCustomCardElement(id));
+  });
+  if (grid.children.length > 0) container.style.display = '';
+}
+
+function addCustomCard() {
+  const id = 'mt::current::custom::' + Date.now();
+  cache[id] = { title: 'New Card' };
+  saveField(id, 'title', 'New Card');
+
+  const container = document.getElementById('custom-cards-container');
+  const grid      = document.getElementById('custom-cards-grid');
+  container.style.display = '';
+  const card = buildCustomCardElement(id);
+  grid.appendChild(card);
+  refreshCardIndicators();
+
+  // Auto-open title edit so user can name it immediately
+  const titleEl = card.querySelector('.card-title');
+  const editBtn = card.querySelector('.card-edit-btn');
+  const wrap    = card.querySelector('.card-title-wrap');
+  startTitleEdit(card, titleEl, editBtn, wrap);
 }
 
 function buildTitleEdit(card, titleEl) {
@@ -315,11 +367,6 @@ function closeEditor() {
   activeKey = null;
 }
 
-// Open on card click
-document.querySelectorAll('.card').forEach(card => {
-  card.addEventListener('click', () => openEditor(card));
-});
-
 // Close buttons
 document.getElementById('modal-close-btn').addEventListener('click', closeEditor);
 modal.addEventListener('click', e => { if (e.target === modal) closeEditor(); });
@@ -375,9 +422,15 @@ document.addEventListener('keydown', e => {
 // ═══════════════════════════════════════════════════════════════
 //  APP STARTUP
 // ═══════════════════════════════════════════════════════════════
+document.getElementById('add-card-btn').addEventListener('click', addCustomCard);
+
+// ═══════════════════════════════════════════════════════════════
+//  APP STARTUP
+// ═══════════════════════════════════════════════════════════════
 async function startApp() {
   await loadAllData();
   initCards();
+  initCustomCards();
   refreshCardIndicators();
   initModalTagRow();
 }
