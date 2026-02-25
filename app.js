@@ -520,10 +520,11 @@ function openEditor(card) {
   modal.classList.add('open');
   modal.setAttribute('aria-hidden', 'false');
   if (activeIsQA) applyQAColors();
-  setTimeout(() => quill.focus(), 150);
+  setTimeout(() => { if (modal.classList.contains('open')) quill.focus(); }, 150);
 }
 
 function closeEditor() {
+  document.activeElement?.blur();
   modal.classList.remove('open', 'fullscreen');
   modal.setAttribute('aria-hidden', 'true');
   fsExpandIcon.style.display   = '';
