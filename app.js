@@ -220,6 +220,11 @@ function setupCard(card, cardId) {
   const savedTitle = cache[cardId]?.title;
   if (savedTitle) titleEl.textContent = savedTitle;
 
+  // Auto-tag Case Packet cards as Reference on first load
+  if (isPdfCategory(card) && cache[cardId]?.tags === undefined) {
+    saveField(cardId, 'tags', ['Reference']);
+  }
+
   buildTitleEdit(card, titleEl);
   buildCardTagDisplay(card, cardId);
   card.addEventListener('click', () => {
@@ -498,41 +503,27 @@ function renderPdfModalBody(cardId, pdfUrl, pdfName) {
   pdfModalBody.querySelector('#pdf-file-input')
     .addEventListener('change', e => {
       const file = e.target.files[0];
-      if (file) uploadPdf(cardId, file);
+      if (!file) return;
+      closePdfModal();         // dismiss immediately
+      uploadPdf(cardId, file); // upload runs in background
     });
 }
 
 async function uploadPdf(cardId, file) {
-  pdfModalBody.innerHTML =
-    `<div class="pdf-uploading">` +
-      `<p>Uploading…</p>` +
-      `<div class="pdf-progress-bar"><div class="pdf-progress-fill" id="pdf-progress-fill"></div></div>` +
-    `</div>`;
-
   try {
     const ref        = storage.ref(`pdfs/${cardId}/${Date.now()}_${file.name}`);
     const uploadTask = ref.put(file);
-
     uploadTask.on('state_changed',
-      snapshot => {
-        const pct  = Math.round(snapshot.bytesTransferred / snapshot.totalBytes * 100);
-        const fill = document.getElementById('pdf-progress-fill');
-        if (fill) fill.style.width = pct + '%';
-      },
-      err => {
-        pdfModalBody.innerHTML = `<p class="pdf-msg pdf-msg--error">Upload failed. Please try again.</p>`;
-        console.error('PDF upload failed:', err);
-      },
+      null, // no progress UI — modal is already closed
+      err  => console.error('PDF upload failed:', err),
       async () => {
         const url = await uploadTask.snapshot.ref.getDownloadURL();
         saveField(cardId, 'pdfUrl',  url);
         saveField(cardId, 'pdfName', file.name);
         refreshCardIndicators();
-        renderPdfModalBody(cardId, url, file.name);
       }
     );
   } catch (err) {
-    pdfModalBody.innerHTML = `<p class="pdf-msg pdf-msg--error">Upload failed. Please try again.</p>`;
     console.error('PDF upload failed:', err);
   }
 }
