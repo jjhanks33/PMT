@@ -93,6 +93,39 @@ const quill = new Quill('#quill-editor', {
 });
 
 // ═══════════════════════════════════════════════════════════════
+//  Q/A AUTO-COLOR  (Directs and Crosses cards)
+// ═══════════════════════════════════════════════════════════════
+const Q_COLOR = '#1d4ed8'; // blue — question
+const A_COLOR = '#b91c1c'; // red  — answer
+let qaColorTimer = null;
+
+function applyQAColors() {
+  const text  = quill.getText();
+  const lines = text.split('\n');
+  let offset  = 0;
+  lines.forEach(line => {
+    const len = line.length;
+    if (len > 0) {
+      const first = line.trimStart()[0]?.toUpperCase();
+      if (first === 'Q') {
+        quill.formatText(offset, len, 'color', Q_COLOR, 'api');
+      } else if (first === 'A') {
+        quill.formatText(offset, len, 'color', A_COLOR, 'api');
+      } else {
+        quill.formatText(offset, len, 'color', false, 'api');
+      }
+    }
+    offset += len + 1; // +1 for the \n
+  });
+}
+
+quill.on('text-change', (delta, oldDelta, source) => {
+  if (source === 'api' || !activeIsQA) return;
+  clearTimeout(qaColorTimer);
+  qaColorTimer = setTimeout(applyQAColors, 300);
+});
+
+// ═══════════════════════════════════════════════════════════════
 //  STORAGE HELPERS
 // ═══════════════════════════════════════════════════════════════
 function getCardKey(card) {
@@ -323,11 +356,15 @@ function saveModalTags() {
 const modal      = document.getElementById('editor-modal');
 const modalTitle = document.getElementById('modal-card-title');
 const saveStatus = document.getElementById('modal-save-status');
-let   activeKey  = null;
-let   saveTimer  = null;
+let   activeKey   = null;
+let   activeIsQA  = false;
+let   saveTimer   = null;
 
 function openEditor(card) {
   activeKey = getCardKey(card);
+  const cat = card.closest('.category-block')?.dataset.category;
+  activeIsQA = (cat === 'Directs' || cat === 'Crosses')
+            || activeKey.includes(' - Direct') || activeKey.includes(' - Cross');
   modalTitle.textContent = card.querySelector('.card-title').textContent.trim();
 
   // Sync tag toggles from cache (native array, no JSON.parse)
@@ -355,6 +392,7 @@ function openEditor(card) {
   saveStatus.classList.remove('visible');
   modal.classList.add('open');
   modal.setAttribute('aria-hidden', 'false');
+  if (activeIsQA) applyQAColors();
   setTimeout(() => quill.focus(), 150);
 }
 
@@ -363,7 +401,8 @@ function closeEditor() {
   modal.setAttribute('aria-hidden', 'true');
   fsExpandIcon.style.display   = '';
   fsCompressIcon.style.display = 'none';
-  activeKey = null;
+  activeIsQA = false;
+  activeKey  = null;
 }
 
 // Close buttons
