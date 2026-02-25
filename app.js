@@ -14,8 +14,9 @@ const FIREBASE_CONFIG = {
 //  FIREBASE
 // ═══════════════════════════════════════════════════════════════
 firebase.initializeApp(FIREBASE_CONFIG);
-const db   = firebase.firestore();
-const auth = firebase.auth();
+const db      = firebase.firestore();
+const auth    = firebase.auth();
+const storage = firebase.storage();
 
 // ── In-memory data cache ──────────────────────────────────────
 // Populated once on startup; all reads are synchronous via cache.
@@ -208,6 +209,10 @@ const TAG_DEFS = [
   { name: 'Reference',   cls: 'tag-toggle--reference',   tagCls: 'tag--orange' },
 ];
 
+function isPdfCategory(card) {
+  return card.closest('.category-block')?.dataset.category === 'Case Packet';
+}
+
 function setupCard(card, cardId) {
   card.dataset.cardId = cardId;
 
@@ -217,7 +222,10 @@ function setupCard(card, cardId) {
 
   buildTitleEdit(card, titleEl);
   buildCardTagDisplay(card, cardId);
-  card.addEventListener('click', () => openEditor(card));
+  card.addEventListener('click', () => {
+    if (isPdfCategory(card)) openPdfModal(card);
+    else openEditor(card);
+  });
 }
 
 function initCards() {
@@ -363,12 +371,9 @@ function renderCardTags(tagsEl, activeTags) {
 // ═══════════════════════════════════════════════════════════════
 function refreshCardIndicators() {
   document.querySelectorAll('.card').forEach(card => {
-    const key = getCardKey(card);
-    if (hasContent(key)) {
-      card.classList.add('has-content');
-    } else {
-      card.classList.remove('has-content');
-    }
+    const key    = getCardKey(card);
+    const filled = isPdfCategory(card) ? !!cache[key]?.pdfUrl : hasContent(key);
+    card.classList.toggle('has-content', filled);
   });
 }
 
@@ -437,6 +442,99 @@ function prependActivityEntry(d) {
   if (container.querySelector('.activity-empty')) container.innerHTML = '';
   container.insertBefore(buildActivityEl(d), container.firstChild);
   while (container.children.length > 50) container.removeChild(container.lastChild);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PDF MODAL
+// ═══════════════════════════════════════════════════════════════
+const pdfModal      = document.getElementById('pdf-modal');
+const pdfModalTitle = document.getElementById('pdf-modal-title');
+const pdfModalBody  = document.getElementById('pdf-modal-body');
+
+function openPdfModal(card) {
+  const cardId   = getCardKey(card);
+  const pdfUrl   = cache[cardId]?.pdfUrl;
+  const pdfName  = cache[cardId]?.pdfName || 'PDF Document';
+  pdfModalTitle.textContent = card.querySelector('.card-title').textContent.trim();
+  renderPdfModalBody(cardId, pdfUrl, pdfName);
+  pdfModal.classList.add('open');
+  pdfModal.setAttribute('aria-hidden', 'false');
+}
+
+function closePdfModal() {
+  document.activeElement?.blur();
+  pdfModal.classList.remove('open');
+  pdfModal.setAttribute('aria-hidden', 'true');
+}
+
+document.getElementById('pdf-modal-close-btn').addEventListener('click', closePdfModal);
+pdfModal.addEventListener('click', e => { if (e.target === pdfModal) closePdfModal(); });
+
+function renderPdfModalBody(cardId, pdfUrl, pdfName) {
+  if (pdfUrl) {
+    pdfModalBody.innerHTML =
+      `<div class="pdf-attached">` +
+        `<div class="pdf-attached-icon">📄</div>` +
+        `<div class="pdf-file-name">${escapeHtml(pdfName)}</div>` +
+        `<div class="pdf-actions">` +
+          `<a class="btn-view-pdf" href="${escapeHtml(pdfUrl)}" target="_blank" rel="noopener">Open PDF</a>` +
+          `<button class="btn-replace-pdf">Replace</button>` +
+        `</div>` +
+      `</div>` +
+      `<input type="file" id="pdf-file-input" accept=".pdf" style="display:none">`;
+    pdfModalBody.querySelector('.btn-replace-pdf')
+      .addEventListener('click', () => pdfModalBody.querySelector('#pdf-file-input').click());
+  } else {
+    pdfModalBody.innerHTML =
+      `<div class="pdf-empty">` +
+        `<div class="pdf-empty-icon">📎</div>` +
+        `<p>No PDF attached yet</p>` +
+        `<button class="btn-attach-pdf">Attach PDF</button>` +
+      `</div>` +
+      `<input type="file" id="pdf-file-input" accept=".pdf" style="display:none">`;
+    pdfModalBody.querySelector('.btn-attach-pdf')
+      .addEventListener('click', () => pdfModalBody.querySelector('#pdf-file-input').click());
+  }
+  pdfModalBody.querySelector('#pdf-file-input')
+    .addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (file) uploadPdf(cardId, file);
+    });
+}
+
+async function uploadPdf(cardId, file) {
+  pdfModalBody.innerHTML =
+    `<div class="pdf-uploading">` +
+      `<p>Uploading…</p>` +
+      `<div class="pdf-progress-bar"><div class="pdf-progress-fill" id="pdf-progress-fill"></div></div>` +
+    `</div>`;
+
+  try {
+    const ref        = storage.ref(`pdfs/${cardId}/${Date.now()}_${file.name}`);
+    const uploadTask = ref.put(file);
+
+    uploadTask.on('state_changed',
+      snapshot => {
+        const pct  = Math.round(snapshot.bytesTransferred / snapshot.totalBytes * 100);
+        const fill = document.getElementById('pdf-progress-fill');
+        if (fill) fill.style.width = pct + '%';
+      },
+      err => {
+        pdfModalBody.innerHTML = `<p class="pdf-msg pdf-msg--error">Upload failed. Please try again.</p>`;
+        console.error('PDF upload failed:', err);
+      },
+      async () => {
+        const url = await uploadTask.snapshot.ref.getDownloadURL();
+        saveField(cardId, 'pdfUrl',  url);
+        saveField(cardId, 'pdfName', file.name);
+        refreshCardIndicators();
+        renderPdfModalBody(cardId, url, file.name);
+      }
+    );
+  } catch (err) {
+    pdfModalBody.innerHTML = `<p class="pdf-msg pdf-msg--error">Upload failed. Please try again.</p>`;
+    console.error('PDF upload failed:', err);
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -542,7 +640,12 @@ function tryCloseEditor() {
 // Close buttons
 document.getElementById('modal-close-btn').addEventListener('click', tryCloseEditor);
 modal.addEventListener('click', e => { if (e.target === modal) tryCloseEditor(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') tryCloseEditor(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (pdfModal.classList.contains('open')) closePdfModal();
+    else tryCloseEditor();
+  }
+});
 
 // Fullscreen toggle
 const fsBtn          = document.getElementById('modal-fullscreen-btn');

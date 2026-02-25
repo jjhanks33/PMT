@@ -87,42 +87,49 @@
           <div class="card">
             <div class="card-icon card-icon--blue">📄</div>
             <div class="card-body">
-              <div class="card-title">Case Packet</div>
-              <div class="card-meta">PDF · 48 pages · Updated Jan 12, 2026</div>
-              <div class="card-tags">
-                <span class="tag tag--blue">Official</span>
-                <span class="tag tag--gray">AMTA</span>
-              </div>
+              <div class="card-title">Full Case</div>
+              <div class="card-meta">PDF Document</div>
+              <div class="card-tags"></div>
             </div>
           </div>
           <div class="card">
             <div class="card-icon card-icon--blue">📄</div>
             <div class="card-body">
-              <div class="card-title">Jury Instructions</div>
-              <div class="card-meta">PDF · 12 pages · Updated Jan 12, 2026</div>
-              <div class="card-tags">
-                <span class="tag tag--blue">Official</span>
-              </div>
+              <div class="card-title">Charges</div>
+              <div class="card-meta">PDF Document</div>
+              <div class="card-tags"></div>
             </div>
           </div>
           <div class="card">
             <div class="card-icon card-icon--blue">📄</div>
             <div class="card-body">
               <div class="card-title">Stipulations</div>
-              <div class="card-meta">PDF · 6 pages · Updated Jan 12, 2026</div>
-              <div class="card-tags">
-                <span class="tag tag--blue">Official</span>
-              </div>
+              <div class="card-meta">PDF Document</div>
+              <div class="card-tags"></div>
             </div>
           </div>
           <div class="card">
             <div class="card-icon card-icon--blue">📄</div>
             <div class="card-body">
-              <div class="card-title">Exhibit List</div>
-              <div class="card-meta">PDF · 4 pages · Updated Jan 14, 2026</div>
-              <div class="card-tags">
-                <span class="tag tag--blue">Official</span>
-              </div>
+              <div class="card-title">Exhibits</div>
+              <div class="card-meta">PDF Document</div>
+              <div class="card-tags"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon card-icon--blue">📄</div>
+            <div class="card-body">
+              <div class="card-title">Fact Situation</div>
+              <div class="card-meta">PDF Document</div>
+              <div class="card-tags"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-icon card-icon--blue">📄</div>
+            <div class="card-body">
+              <div class="card-title">Witnesses</div>
+              <div class="card-meta">PDF Document</div>
+              <div class="card-tags"></div>
             </div>
           </div>
         </div>
@@ -1566,6 +1573,22 @@
     <p>Poly Mock Trial · Riverside Poly High School · <span id="footer-year"></span></p>
   </footer>
 
+  <!-- PDF Modal -->
+  <div id="pdf-modal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-container pdf-modal-container">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="modal-label">PDF Document</div>
+          <div id="pdf-modal-title" class="modal-title"></div>
+        </div>
+        <div class="modal-actions">
+          <button id="pdf-modal-close-btn" class="btn-icon" aria-label="Close">✕</button>
+        </div>
+      </div>
+      <div id="pdf-modal-body" class="pdf-modal-body"></div>
+    </div>
+  </div>
+
   <!-- Editor Modal -->
   <div id="editor-modal" class="modal-overlay" aria-hidden="true">
     <div class="modal-container">
@@ -1601,6 +1624,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

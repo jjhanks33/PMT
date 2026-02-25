@@ -800,6 +800,79 @@ body {
 .pw-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 .pw-error { font-size: 12px; color: var(--red); margin: 8px 0 0; min-height: 16px; }
 
+/* ── PDF Modal ── */
+.pdf-modal-container {
+  max-width: 420px;
+}
+.pdf-modal-body {
+  padding: 36px 28px;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pdf-empty {
+  text-align: center;
+  color: var(--muted);
+}
+.pdf-empty-icon { font-size: 44px; margin-bottom: 14px; }
+.pdf-empty p { font-size: 14px; margin-bottom: 18px; }
+.pdf-attached { text-align: center; }
+.pdf-attached-icon { font-size: 52px; margin-bottom: 10px; }
+.pdf-file-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 20px;
+  word-break: break-all;
+  max-width: 320px;
+}
+.pdf-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.btn-view-pdf {
+  background: var(--green);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: 8px 22px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background .15s;
+}
+.btn-view-pdf:hover { background: var(--green-mid); }
+.btn-replace-pdf, .btn-attach-pdf {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .15s;
+}
+.btn-replace-pdf:hover, .btn-attach-pdf:hover { background: var(--border); }
+.pdf-uploading { text-align: center; width: 100%; }
+.pdf-uploading p { font-size: 14px; color: var(--muted); margin-bottom: 14px; }
+.pdf-progress-bar {
+  background: var(--border);
+  border-radius: 4px;
+  height: 6px;
+  overflow: hidden;
+  max-width: 280px;
+  margin: 0 auto;
+}
+.pdf-progress-fill {
+  background: var(--green);
+  height: 100%;
+  width: 0;
+  transition: width .15s;
+}
+.pdf-msg { font-size: 14px; color: var(--muted); text-align: center; }
+.pdf-msg--error { color: var(--red); }
+
 /* ── Card "last edited by" label ── */
 .card-edited-by {
   font-size: 11px;
