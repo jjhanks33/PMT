@@ -10,13 +10,12 @@ const FIREBASE_CONFIG = {
   appId:             '1:805880145342:web:0f2eade31f2d221fef45ef',
 };
 
-const APP_PASSWORD = 'signsofashovel'; // shared team password
-
 // ═══════════════════════════════════════════════════════════════
 //  FIREBASE
 // ═══════════════════════════════════════════════════════════════
 firebase.initializeApp(FIREBASE_CONFIG);
-const db = firebase.firestore();
+const db   = firebase.firestore();
+const auth = firebase.auth();
 
 // ── In-memory data cache ──────────────────────────────────────
 // Populated once on startup; all reads are synchronous via cache.
@@ -521,49 +520,87 @@ async function startApp() {
   initModalTagRow();
 }
 
-function initPasswordGate() {
-  const overlay = document.getElementById('pw-overlay');
-  const input   = document.getElementById('pw-input');
-  const btn     = document.getElementById('pw-btn');
-  const err     = document.getElementById('pw-error');
+function getAuthErrorMessage(code) {
+  switch (code) {
+    case 'auth/user-not-found':
+    case 'auth/wrong-password':
+    case 'auth/invalid-credential':
+      return 'Incorrect email or password.';
+    case 'auth/invalid-email':
+      return 'Please enter a valid email address.';
+    case 'auth/too-many-requests':
+      return 'Too many attempts. Please try again later.';
+    default:
+      return 'Sign in failed. Check your connection and try again.';
+  }
+}
 
-  async function proceed() {
-    btn.textContent  = 'Loading…';
-    btn.disabled     = true;
-    input.disabled   = true;
-    err.textContent  = '';
+function initAuthGate() {
+  const overlay    = document.getElementById('pw-overlay');
+  const emailInput = document.getElementById('pw-email');
+  const passInput  = document.getElementById('pw-input');
+  const btn        = document.getElementById('pw-btn');
+  const err        = document.getElementById('pw-error');
+  const signOutBtn = document.getElementById('signout-btn');
+  let   appStarted = false;
+
+  async function launchApp() {
+    if (appStarted) return;
+    appStarted = true;
+    emailInput.style.display = 'none';
+    passInput.style.display  = 'none';
+    btn.textContent = 'Loading…';
+    btn.disabled    = true;
+    err.textContent = '';
     try {
       await startApp();
       overlay.remove();
+      signOutBtn.style.display = '';
     } catch (e) {
-      btn.textContent = 'Enter';
+      appStarted = false;
+      emailInput.style.display = '';
+      passInput.style.display  = '';
+      btn.textContent = 'Sign In';
       btn.disabled    = false;
-      input.disabled  = false;
       err.textContent = 'Could not connect. Check your connection and try again.';
       console.error('startApp failed:', e);
+      auth.signOut();
     }
   }
 
-  // Already authenticated this session — skip password, go straight to loading
-  if (sessionStorage.getItem('mt::auth') === 'ok') {
-    input.style.display = 'none';
-    btn.textContent     = 'Loading…';
-    btn.disabled        = true;
-    proceed();
-    return;
+  auth.onAuthStateChanged(user => { if (user) launchApp(); });
+
+  async function signIn() {
+    const email    = emailInput.value.trim();
+    const password = passInput.value;
+    if (!email || !password) { err.textContent = 'Please enter your email and password.'; return; }
+    btn.textContent      = 'Signing in…';
+    btn.disabled         = true;
+    emailInput.disabled  = true;
+    passInput.disabled   = true;
+    err.textContent      = '';
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      // onAuthStateChanged fires → launchApp()
+    } catch (e) {
+      btn.textContent     = 'Sign In';
+      btn.disabled        = false;
+      emailInput.disabled = false;
+      passInput.disabled  = false;
+      err.textContent     = getAuthErrorMessage(e.code);
+    }
   }
 
-  btn.addEventListener('click', async () => {
-    if (input.value === APP_PASSWORD) {
-      sessionStorage.setItem('mt::auth', 'ok');
-      await proceed();
-    } else {
-      err.textContent = 'Incorrect password.';
-      input.value = '';
-      input.focus();
-    }
+  btn.addEventListener('click', signIn);
+  passInput.addEventListener('keydown',  e => { if (e.key === 'Enter') signIn(); });
+  emailInput.addEventListener('keydown', e => { if (e.key === 'Enter') passInput.focus(); });
+
+  signOutBtn.addEventListener('click', async () => {
+    if (isDirty && !confirm('You have unsaved changes. Sign out anyway?')) return;
+    closeEditor();
+    await auth.signOut();
+    window.location.reload();
   });
-  input.addEventListener('keydown', e => { if (e.key === 'Enter') btn.click(); });
 }
 
-initPasswordGate();
+initAuthGate();
