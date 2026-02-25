@@ -120,6 +120,7 @@ function applyQAColors() {
 }
 
 quill.on('text-change', (delta, oldDelta, source) => {
+  if (source !== 'api') isDirty = true;
   if (source === 'api' || !activeIsQA) return;
   clearTimeout(qaColorTimer);
   qaColorTimer = setTimeout(applyQAColors, 300);
@@ -358,6 +359,7 @@ const modalTitle = document.getElementById('modal-card-title');
 const saveStatus = document.getElementById('modal-save-status');
 let   activeKey   = null;
 let   activeIsQA  = false;
+let   isDirty     = false;
 let   saveTimer   = null;
 
 function openEditor(card) {
@@ -388,6 +390,7 @@ function openEditor(card) {
     quill.setText('');
   }
 
+  isDirty = false;
   saveStatus.textContent = '';
   saveStatus.classList.remove('visible');
   modal.classList.add('open');
@@ -402,13 +405,19 @@ function closeEditor() {
   fsExpandIcon.style.display   = '';
   fsCompressIcon.style.display = 'none';
   activeIsQA = false;
+  isDirty    = false;
   activeKey  = null;
 }
 
+function tryCloseEditor() {
+  if (!isDirty) { closeEditor(); return; }
+  if (confirm('You have unsaved changes. Close without saving?')) closeEditor();
+}
+
 // Close buttons
-document.getElementById('modal-close-btn').addEventListener('click', closeEditor);
-modal.addEventListener('click', e => { if (e.target === modal) closeEditor(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeEditor(); });
+document.getElementById('modal-close-btn').addEventListener('click', tryCloseEditor);
+modal.addEventListener('click', e => { if (e.target === modal) tryCloseEditor(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') tryCloseEditor(); });
 
 // Fullscreen toggle
 const fsBtn          = document.getElementById('modal-fullscreen-btn');
@@ -427,6 +436,7 @@ fsBtn.addEventListener('click', () => {
 // ═══════════════════════════════════════════════════════════════
 function saveContent() {
   if (!activeKey) return;
+  isDirty = false;
   saveField(activeKey, 'content', JSON.stringify(quill.getContents()));
   refreshCardIndicators();
 
