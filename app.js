@@ -45,6 +45,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('tab-' + target).classList.add('active');
+    if (target === 'activity') loadActivityFeed();
   });
 });
 
@@ -156,6 +157,31 @@ quill.on('text-change', (delta, oldDelta, source) => {
   clearTimeout(qaColorTimer);
   qaColorTimer = setTimeout(applyQAColors, 300);
 });
+
+// ═══════════════════════════════════════════════════════════════
+//  UTILITY HELPERS
+// ═══════════════════════════════════════════════════════════════
+function formatEmail(email) {
+  if (!email) return 'Unknown';
+  return email.split('@')[0];
+}
+
+function formatEditTime(ts) {
+  if (!ts) return '';
+  const diff = Date.now() - ts;
+  if (diff < 60000)    return 'just now';
+  if (diff < 3600000)  return Math.floor(diff / 60000) + 'm ago';
+  if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
+  const d = new Date(ts);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+       + ', ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
 
 // ═══════════════════════════════════════════════════════════════
 //  STORAGE HELPERS
@@ -346,6 +372,73 @@ function refreshCardIndicators() {
   });
 }
 
+// ── "Last edited by" label on cards ───────────────────────────
+function updateCardEditedBy(card, email, ts) {
+  let el = card.querySelector('.card-edited-by');
+  if (!el) {
+    el = document.createElement('div');
+    el.className = 'card-edited-by';
+    const cardBody = card.querySelector('.card-body');
+    if (cardBody) cardBody.appendChild(el);
+  }
+  el.textContent = formatEmail(email) + ' · ' + formatEditTime(ts);
+}
+
+function refreshCardEditedBy() {
+  document.querySelectorAll('.card').forEach(card => {
+    const key  = card.dataset.cardId;
+    if (!key) return;
+    const by = cache[key]?.lastEditedBy;
+    const at = cache[key]?.lastEditedAt;
+    if (by) updateCardEditedBy(card, by, at);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ACTIVITY FEED
+// ═══════════════════════════════════════════════════════════════
+function buildActivityEl(d) {
+  const el = document.createElement('div');
+  el.className = 'activity-entry';
+  el.innerHTML =
+    `<div class="activity-main">` +
+      `<span class="activity-user">${escapeHtml(formatEmail(d.userEmail))}</span>` +
+      ` edited ` +
+      `<span class="activity-card">${escapeHtml(d.cardTitle)}</span>` +
+    `</div>` +
+    `<div class="activity-time">${escapeHtml(formatEditTime(d.timestamp))}</div>`;
+  return el;
+}
+
+async function loadActivityFeed() {
+  const container = document.getElementById('activity-feed');
+  if (!container) return;
+  container.innerHTML = '<p class="activity-empty">Loading…</p>';
+  try {
+    const snap = await db.collection('activity')
+      .orderBy('timestamp', 'desc').limit(50).get();
+    if (snap.empty) {
+      container.innerHTML = '<p class="activity-empty">No activity yet. Start editing cards!</p>';
+      return;
+    }
+    container.innerHTML = '';
+    snap.forEach(doc => container.appendChild(buildActivityEl(doc.data())));
+  } catch (err) {
+    container.innerHTML = '<p class="activity-empty">Could not load activity.</p>';
+    console.error('Activity load failed:', err);
+  }
+}
+
+function prependActivityEntry(d) {
+  const container = document.getElementById('activity-feed');
+  if (!container) return;
+  if (!document.getElementById('tab-activity')?.classList.contains('active')) return;
+  // Remove placeholder text on first real entry
+  if (container.querySelector('.activity-empty')) container.innerHTML = '';
+  container.insertBefore(buildActivityEl(d), container.firstChild);
+  while (container.children.length > 50) container.removeChild(container.lastChild);
+}
+
 // ═══════════════════════════════════════════════════════════════
 //  MODAL TAG ROW
 // ═══════════════════════════════════════════════════════════════
@@ -468,8 +561,26 @@ fsBtn.addEventListener('click', () => {
 function saveContent() {
   if (!activeKey) return;
   isDirty = false;
-  saveField(activeKey, 'content', JSON.stringify(quill.getContents()));
+  const now       = Date.now();
+  const userEmail = auth.currentUser?.email || 'unknown';
+  const cardTitle = modalTitle.textContent;
+
+  saveField(activeKey, 'content',      JSON.stringify(quill.getContents()));
+  saveField(activeKey, 'lastEditedBy', userEmail);
+  saveField(activeKey, 'lastEditedAt', now);
+
+  // Log to activity feed
+  db.collection('activity').add({ cardId: activeKey, cardTitle, userEmail, timestamp: now })
+    .catch(err => console.error('Activity write failed:', err));
+
   refreshCardIndicators();
+
+  // Update the "last edited by" label on this card
+  const card = document.querySelector(`.card[data-card-id="${CSS.escape(activeKey)}"]`);
+  if (card) updateCardEditedBy(card, userEmail, now);
+
+  // Prepend to the feed if the Activity tab is open
+  prependActivityEntry({ cardTitle, userEmail, timestamp: now });
 
   saveStatus.textContent = 'Saved ✓';
   saveStatus.classList.add('visible');
@@ -517,6 +628,7 @@ async function startApp() {
   initCards();
   initCustomCards();
   refreshCardIndicators();
+  refreshCardEditedBy();
   initModalTagRow();
 }
 
