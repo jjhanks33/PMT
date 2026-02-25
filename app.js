@@ -142,11 +142,12 @@ quill.on('text-change', (delta, oldDelta, source) => {
         const prevFirst     = prevLine.trimStart()[0]?.toUpperCase();
         const prefix        = prevFirst === 'Q' ? 'A' : 'Q';
 
+        const newPos = lineStart + 3;
         quill.deleteText(lineStart, 3, 'api');
         quill.insertText(lineStart, prefix + ': ', 'api');
-        quill.setSelection(lineStart + 3, 0, 'api');
         clearTimeout(qaColorTimer);
         applyQAColors();
+        setTimeout(() => quill.setSelection(newPos, 0), 0);
         return;
       }
     }
