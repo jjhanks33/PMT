@@ -121,6 +121,37 @@ function applyQAColors() {
 
 quill.on('text-change', (delta, oldDelta, source) => {
   if (source !== 'api') isDirty = true;
+
+  // -- expansion: typing `-- ` on a blank line auto-inserts Q: or A:
+  // based on the preceding line (Q→A, A→Q, default Q).
+  if (source === 'user' && activeIsQA) {
+    const ops = delta.ops;
+    let insertPos = -1;
+    if (ops.length === 1 && ops[0].insert === ' ') insertPos = 0;
+    else if (ops.length === 2 && ops[0].retain >= 0 && ops[1].insert === ' ') insertPos = ops[0].retain;
+
+    if (insertPos >= 0) {
+      const fullText  = quill.getText();
+      const lineStart = fullText.lastIndexOf('\n', insertPos - 1) + 1;
+      const lineText  = fullText.substring(lineStart, insertPos);
+
+      if (lineText === '--') {
+        const prevLineEnd   = lineStart - 1;
+        const prevLineStart = prevLineEnd > 0 ? fullText.lastIndexOf('\n', prevLineEnd - 1) + 1 : 0;
+        const prevLine      = prevLineEnd > 0 ? fullText.substring(prevLineStart, prevLineEnd) : '';
+        const prevFirst     = prevLine.trimStart()[0]?.toUpperCase();
+        const prefix        = prevFirst === 'Q' ? 'A' : 'Q';
+
+        quill.deleteText(lineStart, 3, 'api');
+        quill.insertText(lineStart, prefix + ': ', 'api');
+        quill.setSelection(lineStart + 3, 0, 'api');
+        clearTimeout(qaColorTimer);
+        applyQAColors();
+        return;
+      }
+    }
+  }
+
   if (source === 'api' || !activeIsQA) return;
   clearTimeout(qaColorTimer);
   qaColorTimer = setTimeout(applyQAColors, 300);
