@@ -487,6 +487,8 @@ function renderPdfModalBody(cardId, pdfUrl, pdfName) {
         `</div>` +
       `</div>` +
       `<input type="file" id="pdf-file-input" accept=".pdf" style="display:none">`;
+    pdfModalBody.querySelector('.btn-view-pdf')
+      .addEventListener('click', () => closePdfModal());
     pdfModalBody.querySelector('.btn-replace-pdf')
       .addEventListener('click', () => pdfModalBody.querySelector('#pdf-file-input').click());
   } else {
