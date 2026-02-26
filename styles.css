@@ -724,12 +724,64 @@ body {
 
 /* ── Responsive ── */
 @media (max-width: 600px) {
-  .header-titles h1 { font-size: 18px; }
+  /* Header */
+  .header { padding: 12px 0; }
+  .header-inner { padding: 0 14px; }
+  .logo-icon { font-size: 26px; }
+  .header-titles h1 { font-size: 17px; }
+  .header-titles p { display: none; }
   .season-badge { display: none; }
+  .account-name-display, .account-chevron { display: none; }
+  .account-btn { padding: 5px 8px; }
+
+  /* Tab nav — scrolls horizontally instead of wrapping/overflowing */
+  .tab-nav-inner {
+    padding: 0 10px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tab-nav-inner::-webkit-scrollbar { display: none; }
+  .tab-btn { padding: 13px 14px; font-size: 13px; white-space: nowrap; }
+
+  /* Main layout */
+  .main { padding: 20px 14px 48px; }
+  .section-header { margin-bottom: 20px; }
+  .section-header h2 { font-size: 20px; }
+
+  /* Case banner */
+  .case-banner { flex-direction: column; align-items: flex-start; gap: 10px; padding: 14px 16px; }
+
+  /* Grids */
   .card-grid { grid-template-columns: 1fr; }
   .video-grid { grid-template-columns: 1fr; }
-  .tab-btn { padding: 14px 12px; font-size: 13px; }
-  .case-banner { flex-direction: column; align-items: flex-start; gap: 12px; }
+
+  /* Accordion */
+  .accordion-header { padding: 13px 16px; }
+  .accordion-title { font-size: 13px; }
+  .accordion-title em { display: none; }
+  .accordion-body { padding: 14px 16px 18px; }
+
+  /* Modals — bottom sheet style */
+  .modal-overlay { align-items: flex-end; padding-top: 60px; }
+  .modal-container {
+    width: 100vw;
+    max-height: 92vh;
+    border-radius: 16px 16px 0 0;
+  }
+  .modal-overlay.fullscreen { align-items: stretch; padding-top: 0; }
+  .modal-overlay.fullscreen .modal-container { border-radius: 0; max-height: 100%; }
+  .modal-header { padding: 12px 14px; }
+  .modal-title { font-size: 14px; max-width: 200px; }
+  .btn-paste { display: none; }
+  .modal-actions { gap: 7px; }
+  .pdf-modal-container { max-width: 100%; }
+
+  /* Account dropdown — stay within screen width */
+  .account-dropdown { width: min(260px, calc(100vw - 20px)); }
+
+  /* Login box */
+  .pw-box { padding: 28px 22px; }
 }
 
 /* ── Per-category Add Card button ── */
