@@ -8,6 +8,8 @@ const FIREBASE_CONFIG = {
   storageBucket:     'polymocktrial-77905.firebasestorage.app',
   messagingSenderId: '805880145342',
   appId:             '1:805880145342:web:0f2eade31f2d221fef45ef',
+  // Paste your Realtime Database URL here (Firebase Console → Realtime Database → copy URL)
+  databaseURL:       'https://polymocktrial-77905-default-rtdb.firebaseio.com',
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -17,6 +19,8 @@ firebase.initializeApp(FIREBASE_CONFIG);
 const db      = firebase.firestore();
 const auth    = firebase.auth();
 const storage = firebase.storage();
+let   rtdb    = null;
+try { rtdb = firebase.database(); } catch (e) { console.warn('Realtime Database not available:', e.message); }
 
 // ── In-memory data cache ──────────────────────────────────────
 // Populated once on startup; all reads are synchronous via cache.
@@ -122,6 +126,15 @@ function applyQAColors() {
 
 quill.on('text-change', (delta, oldDelta, source) => {
   if (source !== 'api') isDirty = true;
+
+  // Typing presence indicator
+  if (source === 'user' && presenceRef && activeKey) {
+    presenceRef.update({ typing: true }).catch(() => {});
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(() => {
+      if (presenceRef) presenceRef.update({ typing: false }).catch(() => {});
+    }, 3000);
+  }
 
   // -- expansion: typing `-- ` on a blank line auto-inserts Q: or A:
   // based on the preceding line (Q→A, A→Q, default Q).
@@ -612,10 +625,15 @@ function openEditor(card) {
   modal.setAttribute('aria-hidden', 'false');
   if (activeIsQA) applyQAColors();
   setTimeout(() => { if (modal.classList.contains('open')) quill.focus(); }, 150);
+  if (presenceRef) presenceRef.update({ currentCard: activeKey, typing: false }).catch(() => {});
+  watchCardPresence(activeKey);
 }
 
 function closeEditor() {
   document.activeElement?.blur();
+  if (presenceRef) presenceRef.update({ currentCard: null, typing: false }).catch(() => {});
+  clearTimeout(typingTimer);
+  unwatchCardPresence();
   modal.classList.remove('open', 'fullscreen');
   modal.setAttribute('aria-hidden', 'true');
   fsExpandIcon.style.display   = '';
@@ -729,6 +747,69 @@ async function startApp() {
   refreshCardIndicators();
   refreshCardEditedBy();
   initModalTagRow();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PRESENCE  (Realtime Database)
+// ═══════════════════════════════════════════════════════════════
+let presenceRef      = null;
+let typingTimer      = null;
+let cardPresenceOff  = null;
+
+function initPresence() {
+  if (!rtdb) return;
+  const user = auth.currentUser;
+  if (!user) return;
+  const userName = user.displayName || formatEmail(user.email);
+  presenceRef = rtdb.ref('presence/' + user.uid);
+
+  rtdb.ref('.info/connected').on('value', snap => {
+    if (!snap.val()) return;
+    presenceRef.onDisconnect().remove();
+    presenceRef.set({
+      name:        userName,
+      currentCard: activeKey || null,
+      typing:      false,
+      t:           firebase.database.ServerValue.TIMESTAMP,
+    });
+  });
+}
+
+function watchCardPresence(cardId) {
+  if (!rtdb) return;
+  if (cardPresenceOff) { cardPresenceOff(); cardPresenceOff = null; }
+  const ref = rtdb.ref('presence');
+  const handler = snap => {
+    const others = [];
+    snap.forEach(child => {
+      if (child.key === auth.currentUser?.uid) return;
+      const d = child.val();
+      if (d && d.currentCard === cardId) {
+        others.push({ name: d.name, typing: !!d.typing });
+      }
+    });
+    renderModalPresence(others);
+  };
+  ref.on('value', handler);
+  cardPresenceOff = () => ref.off('value', handler);
+}
+
+function unwatchCardPresence() {
+  if (cardPresenceOff) { cardPresenceOff(); cardPresenceOff = null; }
+  renderModalPresence([]);
+}
+
+function renderModalPresence(others) {
+  const row = document.getElementById('modal-presence-row');
+  if (!row) return;
+  if (!others.length) { row.innerHTML = ''; return; }
+  row.innerHTML = others.slice(0, 3).map(o => {
+    const cls   = o.typing ? 'presence-chip presence-chip--typing' : 'presence-chip';
+    const label = o.typing
+      ? `<span class="presence-dot"></span>${escapeHtml(o.name)} is typing…`
+      : `<span class="presence-dot"></span>${escapeHtml(o.name)} is viewing`;
+    return `<span class="${cls}">${label}</span>`;
+  }).join('');
 }
 
 function initAccountMenu() {
@@ -866,6 +947,7 @@ function initAuthGate() {
       overlay.remove();
       document.getElementById('account-menu').style.display = '';
       initAccountMenu();
+      initPresence();
     } catch (e) {
       appStarted = false;
       emailInput.style.display = '';
