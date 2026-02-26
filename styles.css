@@ -80,6 +80,11 @@ body {
   border-radius: 20px;
   letter-spacing: .3px;
 }
+.header-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 
 /* ── Tab Nav ── */
 .tab-nav {

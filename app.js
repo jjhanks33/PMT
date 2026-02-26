@@ -827,7 +827,6 @@ function initAccountMenu() {
     window.location.reload();
   });
 
-  accountMenu.style.display = '';
   refreshAccountDisplay();
 }
 
@@ -865,6 +864,7 @@ function initAuthGate() {
     try {
       await startApp();
       overlay.remove();
+      document.getElementById('account-menu').style.display = '';
       initAccountMenu();
     } catch (e) {
       appStarted = false;
