@@ -627,6 +627,7 @@ function openEditor(card) {
   setTimeout(() => { if (modal.classList.contains('open')) quill.focus(); }, 150);
   if (presenceRef) presenceRef.update({ currentCard: activeKey, typing: false }).catch(() => {});
   watchCardPresence(activeKey);
+  watchCardContent(activeKey);
 }
 
 function closeEditor() {
@@ -634,6 +635,7 @@ function closeEditor() {
   if (presenceRef) presenceRef.update({ currentCard: null, typing: false }).catch(() => {});
   clearTimeout(typingTimer);
   unwatchCardPresence();
+  unwatchCardContent();
   modal.classList.remove('open', 'fullscreen');
   modal.setAttribute('aria-hidden', 'true');
   fsExpandIcon.style.display   = '';
@@ -755,6 +757,7 @@ async function startApp() {
 let presenceRef      = null;
 let typingTimer      = null;
 let cardPresenceOff  = null;
+let cardSnapshotOff  = null;
 
 function initPresence() {
   if (!rtdb) return;
@@ -797,6 +800,26 @@ function watchCardPresence(cardId) {
 function unwatchCardPresence() {
   if (cardPresenceOff) { cardPresenceOff(); cardPresenceOff = null; }
   renderModalPresence([]);
+}
+
+function watchCardContent(cardId) {
+  if (cardSnapshotOff) { cardSnapshotOff(); cardSnapshotOff = null; }
+  cardSnapshotOff = db.collection('cards').doc(cardId).onSnapshot(snap => {
+    if (!snap.exists || !activeKey) return;
+    const data = snap.data();
+    if (!data.content) return;
+    if (data.content === cache[activeKey]?.content) return; // our own write, skip
+    cache[activeKey] = { ...(cache[activeKey] || {}), ...data };
+    if (!isDirty) {
+      const sel = quill.getSelection();
+      try { quill.setContents(JSON.parse(data.content), 'api'); } catch {}
+      if (sel) quill.setSelection(sel.index, sel.length);
+    }
+  });
+}
+
+function unwatchCardContent() {
+  if (cardSnapshotOff) { cardSnapshotOff(); cardSnapshotOff = null; }
 }
 
 function renderModalPresence(others) {
