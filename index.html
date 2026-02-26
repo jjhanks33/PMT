@@ -34,7 +34,33 @@
       </div>
       <div class="header-meta">
         <span class="season-badge">2025–2026 Season</span>
-        <button id="signout-btn" class="btn-signout" style="display:none">Sign out</button>
+        <div id="account-menu" class="account-menu" style="display:none">
+          <button id="account-btn" class="account-btn" aria-label="Account menu" aria-expanded="false">
+            <span id="account-avatar" class="account-avatar">?</span>
+            <span id="account-name-display" class="account-name-display"></span>
+            <span class="account-chevron">▾</span>
+          </button>
+          <div id="account-dropdown" class="account-dropdown" hidden>
+            <div class="account-section">
+              <label class="account-label" for="account-display-input">Display name</label>
+              <div class="account-field-row">
+                <input id="account-display-input" class="account-input" type="text" placeholder="Your name" autocomplete="off" />
+                <button id="account-name-save-btn" class="account-action-btn">Save</button>
+              </div>
+              <p id="account-name-msg" class="account-msg"></p>
+            </div>
+            <div class="account-section">
+              <label class="account-label" for="account-pw-input">Change password</label>
+              <div class="account-field-row">
+                <input id="account-pw-input" class="account-input" type="password" placeholder="New password" autocomplete="new-password" />
+                <button id="account-pw-save-btn" class="account-action-btn">Save</button>
+              </div>
+              <p id="account-pw-msg" class="account-msg"></p>
+            </div>
+            <div class="account-divider"></div>
+            <button id="signout-btn" class="account-signout-btn">Sign out</button>
+          </div>
+        </div>
       </div>
     </div>
   </header>

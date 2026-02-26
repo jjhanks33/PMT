@@ -383,7 +383,7 @@ function refreshCardIndicators() {
 }
 
 // ── "Last edited by" label on cards ───────────────────────────
-function updateCardEditedBy(card, email, ts) {
+function updateCardEditedBy(card, name, ts) {
   let el = card.querySelector('.card-edited-by');
   if (!el) {
     el = document.createElement('div');
@@ -391,7 +391,7 @@ function updateCardEditedBy(card, email, ts) {
     const cardBody = card.querySelector('.card-body');
     if (cardBody) cardBody.appendChild(el);
   }
-  el.textContent = formatEmail(email) + ' · ' + formatEditTime(ts);
+  el.textContent = name + ' · ' + formatEditTime(ts);
 }
 
 function refreshCardEditedBy() {
@@ -412,7 +412,7 @@ function buildActivityEl(d) {
   el.className = 'activity-entry';
   el.innerHTML =
     `<div class="activity-main">` +
-      `<span class="activity-user">${escapeHtml(formatEmail(d.userEmail))}</span>` +
+      `<span class="activity-user">${escapeHtml(d.userName || formatEmail(d.userEmail))}</span>` +
       ` edited ` +
       `<span class="activity-card">${escapeHtml(d.cardTitle)}</span>` +
     `</div>` +
@@ -658,26 +658,28 @@ fsBtn.addEventListener('click', () => {
 function saveContent() {
   if (!activeKey) return;
   isDirty = false;
-  const now       = Date.now();
-  const userEmail = auth.currentUser?.email || 'unknown';
-  const cardTitle = modalTitle.textContent;
+  const now         = Date.now();
+  const user        = auth.currentUser;
+  const userEmail   = user?.email   || 'unknown';
+  const userName    = user?.displayName || formatEmail(userEmail);
+  const cardTitle   = modalTitle.textContent;
 
   saveField(activeKey, 'content',      JSON.stringify(quill.getContents()));
-  saveField(activeKey, 'lastEditedBy', userEmail);
+  saveField(activeKey, 'lastEditedBy', userName);
   saveField(activeKey, 'lastEditedAt', now);
 
   // Log to activity feed
-  db.collection('activity').add({ cardId: activeKey, cardTitle, userEmail, timestamp: now })
+  db.collection('activity').add({ cardId: activeKey, cardTitle, userName, userEmail, timestamp: now })
     .catch(err => console.error('Activity write failed:', err));
 
   refreshCardIndicators();
 
   // Update the "last edited by" label on this card
   const card = document.querySelector(`.card[data-card-id="${CSS.escape(activeKey)}"]`);
-  if (card) updateCardEditedBy(card, userEmail, now);
+  if (card) updateCardEditedBy(card, userName, now);
 
   // Prepend to the feed if the Activity tab is open
-  prependActivityEntry({ cardTitle, userEmail, timestamp: now });
+  prependActivityEntry({ cardTitle, userName, userEmail, timestamp: now });
 
   saveStatus.textContent = 'Saved ✓';
   saveStatus.classList.add('visible');
@@ -729,6 +731,106 @@ async function startApp() {
   initModalTagRow();
 }
 
+function initAccountMenu() {
+  const accountMenu    = document.getElementById('account-menu');
+  const accountBtn     = document.getElementById('account-btn');
+  const accountDropdown = document.getElementById('account-dropdown');
+  const accountAvatar  = document.getElementById('account-avatar');
+  const accountNameDisp = document.getElementById('account-name-display');
+  const displayInput   = document.getElementById('account-display-input');
+  const nameSaveBtn    = document.getElementById('account-name-save-btn');
+  const nameMsgEl      = document.getElementById('account-name-msg');
+  const pwInput        = document.getElementById('account-pw-input');
+  const pwSaveBtn      = document.getElementById('account-pw-save-btn');
+  const pwMsgEl        = document.getElementById('account-pw-msg');
+  const signoutBtn     = document.getElementById('signout-btn');
+
+  function refreshAccountDisplay() {
+    const user        = auth.currentUser;
+    const displayName = user?.displayName || formatEmail(user?.email);
+    accountAvatar.textContent   = displayName.charAt(0).toUpperCase();
+    accountNameDisp.textContent = displayName;
+    displayInput.value = user?.displayName || '';
+  }
+
+  function toggleDropdown(open) {
+    if (open === undefined) open = accountDropdown.hidden;
+    accountDropdown.hidden = !open;
+    accountBtn.setAttribute('aria-expanded', String(open));
+    if (open) {
+      nameMsgEl.textContent = '';
+      pwMsgEl.textContent   = '';
+      pwInput.value         = '';
+      displayInput.value    = auth.currentUser?.displayName || '';
+    }
+  }
+
+  accountBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    toggleDropdown();
+  });
+
+  document.addEventListener('click', e => {
+    if (!accountMenu.contains(e.target)) toggleDropdown(false);
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && !accountDropdown.hidden) toggleDropdown(false);
+  });
+
+  nameSaveBtn.addEventListener('click', async () => {
+    const name = displayInput.value.trim();
+    if (!name) { nameMsgEl.textContent = 'Name cannot be empty.'; nameMsgEl.className = 'account-msg account-msg--err'; return; }
+    nameSaveBtn.disabled  = true;
+    nameMsgEl.textContent = '';
+    try {
+      await auth.currentUser.updateProfile({ displayName: name });
+      refreshAccountDisplay();
+      nameMsgEl.textContent = 'Name updated!';
+      nameMsgEl.className   = 'account-msg account-msg--ok';
+      setTimeout(() => { nameMsgEl.textContent = ''; }, 2000);
+    } catch {
+      nameMsgEl.textContent = 'Failed to update name.';
+      nameMsgEl.className   = 'account-msg account-msg--err';
+    } finally {
+      nameSaveBtn.disabled = false;
+    }
+  });
+
+  pwSaveBtn.addEventListener('click', async () => {
+    const pw = pwInput.value;
+    if (!pw) { pwMsgEl.textContent = 'Enter a new password.'; pwMsgEl.className = 'account-msg account-msg--err'; return; }
+    if (pw.length < 6) { pwMsgEl.textContent = 'Must be at least 6 characters.'; pwMsgEl.className = 'account-msg account-msg--err'; return; }
+    pwSaveBtn.disabled  = true;
+    pwMsgEl.textContent = '';
+    try {
+      await auth.currentUser.updatePassword(pw);
+      pwInput.value       = '';
+      pwMsgEl.textContent = 'Password updated!';
+      pwMsgEl.className   = 'account-msg account-msg--ok';
+      setTimeout(() => { pwMsgEl.textContent = ''; }, 2000);
+    } catch (err) {
+      pwMsgEl.textContent = err.code === 'auth/requires-recent-login'
+        ? 'Sign out and back in first, then try again.'
+        : 'Failed to update password.';
+      pwMsgEl.className = 'account-msg account-msg--err';
+    } finally {
+      pwSaveBtn.disabled = false;
+    }
+  });
+
+  signoutBtn.addEventListener('click', async () => {
+    if (isDirty && !confirm('You have unsaved changes. Sign out anyway?')) return;
+    closeEditor();
+    toggleDropdown(false);
+    await auth.signOut();
+    window.location.reload();
+  });
+
+  accountMenu.style.display = '';
+  refreshAccountDisplay();
+}
+
 function getAuthErrorMessage(code) {
   switch (code) {
     case 'auth/user-not-found':
@@ -750,7 +852,6 @@ function initAuthGate() {
   const passInput  = document.getElementById('pw-input');
   const btn        = document.getElementById('pw-btn');
   const err        = document.getElementById('pw-error');
-  const signOutBtn = document.getElementById('signout-btn');
   let   appStarted = false;
 
   async function launchApp() {
@@ -764,7 +865,7 @@ function initAuthGate() {
     try {
       await startApp();
       overlay.remove();
-      signOutBtn.style.display = '';
+      initAccountMenu();
     } catch (e) {
       appStarted = false;
       emailInput.style.display = '';
@@ -803,13 +904,6 @@ function initAuthGate() {
   btn.addEventListener('click', signIn);
   passInput.addEventListener('keydown',  e => { if (e.key === 'Enter') signIn(); });
   emailInput.addEventListener('keydown', e => { if (e.key === 'Enter') passInput.focus(); });
-
-  signOutBtn.addEventListener('click', async () => {
-    if (isDirty && !confirm('You have unsaved changes. Sign out anyway?')) return;
-    closeEditor();
-    await auth.signOut();
-    window.location.reload();
-  });
 }
 
 initAuthGate();

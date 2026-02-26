@@ -916,15 +916,116 @@ body {
   padding: 24px 0;
 }
 
-/* ── Sign-out button (header) ── */
-.btn-signout {
+/* ── Account menu (header) ── */
+.account-menu {
+  position: relative;
+}
+.account-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
   background: rgba(255,255,255,.12);
   border: 1px solid rgba(255,255,255,.25);
+  border-radius: 20px;
   color: #f0ffe0;
-  font-size: 12px;
-  padding: 4px 12px;
-  border-radius: 14px;
+  padding: 5px 12px 5px 6px;
   cursor: pointer;
+  font-size: 13px;
   transition: background .15s;
 }
-.btn-signout:hover { background: rgba(255,255,255,.22); }
+.account-btn:hover { background: rgba(255,255,255,.22); }
+.account-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.3);
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.account-name-display {
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.account-chevron { font-size: 10px; opacity: .7; }
+
+.account-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 260px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  z-index: 200;
+  padding: 8px 0;
+}
+.account-section { padding: 10px 14px; }
+.account-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+.account-field-row { display: flex; gap: 6px; }
+.account-input {
+  flex: 1;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 13px;
+  color: #111827;
+  outline: none;
+  min-width: 0;
+}
+.account-input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99,102,241,.15);
+}
+.account-action-btn {
+  background: #6366f1;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 11px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s;
+}
+.account-action-btn:hover:not(:disabled) { background: #4f46e5; }
+.account-action-btn:disabled { opacity: .6; cursor: not-allowed; }
+.account-msg {
+  font-size: 11px;
+  margin-top: 4px;
+  min-height: 14px;
+  color: transparent;
+}
+.account-msg--ok  { color: #16a34a; }
+.account-msg--err { color: #dc2626; }
+.account-divider { border-top: 1px solid #e5e7eb; margin: 4px 0; }
+.account-signout-btn {
+  display: block;
+  width: calc(100% - 28px);
+  margin: 6px 14px 4px;
+  padding: 7px 12px;
+  background: none;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  color: #374151;
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+  transition: background .15s;
+}
+.account-signout-btn:hover { background: #f9fafb; }
